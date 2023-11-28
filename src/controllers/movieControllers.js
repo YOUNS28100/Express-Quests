@@ -25,20 +25,32 @@ const movies = [
   },
 ];
 
+const database = require("../../database");
+
 const getMovies = (req, res) => {
-  res.json(movies);
+  database
+    .query("select * from movies")
+    .then(([movies]) => {
+      movies ? res.json(movies) : res.sendStatus(404);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
 };
 
 const getMovieById = (req, res) => {
   const id = parseInt(req.params.id);
 
-  const movie = movies.find((movie) => movie.id === id);
-
-  if (movie != null) {
-    res.json(movie);
-  } else {
-    res.status(404).send("Not Found");
-  }
+  database
+    .query("select * from movies where id=?", [id])
+    .then(([movies]) => {
+      movies.length ? res.json(movies[0]) : res.sendStatus(404);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
 };
 
 module.exports = {
