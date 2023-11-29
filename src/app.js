@@ -5,8 +5,8 @@ app.use(express.json());
 
 const movieControllers = require("./controllers/movieControllers");
 const usersController = require("./controllers/usersController");
-const { validateMovie } = require("./middlewares/validateMovie");
-const { validateUser } = require("./middlewares/validateUser");
+const validateMovie = require("./middlewares/validateMovie");
+const validateUser = require("./middlewares/validateUser");
 
 app.get("/api/movies", movieControllers.getMovies);
 app.post("/api/movies", validateMovie, movieControllers.addMovie);

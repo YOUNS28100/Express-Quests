@@ -5,14 +5,12 @@ const validateUser = (req, res, next) => {
 
   if (firstname == null) {
     errors.push({ field: "firstname", message: "This field is required" });
-  }
-  if (typeof firstname !== "string") {
+  } else if (typeof firstname !== "string") {
     errors.push({
       field: "firstname",
       message: "This type of field is not correct",
     });
-  }
-  if (firstname.length >= 255) {
+  } else if (firstname.length >= 255) {
     errors.push({
       field: "firstname",
       message: "Should contain less than 255 characters",
@@ -20,14 +18,12 @@ const validateUser = (req, res, next) => {
   }
   if (lastname == null) {
     errors.push({ field: "lastname", message: "This field is required" });
-  }
-  if (typeof lastname !== "string") {
+  } else if (typeof lastname !== "string") {
     errors.push({
       field: "lastname",
       message: "This type of field is not correct",
     });
-  }
-  if (lastname.length >= 255) {
+  } else if (lastname.length >= 255) {
     errors.push({
       field: "lastname",
       message: "Should contain less than 255 characters",
@@ -36,33 +32,29 @@ const validateUser = (req, res, next) => {
 
   if (email == null) {
     errors.push({ field: "year", message: "This field is required" });
-  }
-  if (typeof email !== "string") {
+  } else if (typeof email !== "string") {
     errors.push({
       field: "email",
       message: "This type of field is not correct",
     });
-  }
-  if (!emailRegex.test(email)) {
+  } else if (!emailRegex.test(email)) {
     errors.push({ field: "email", message: "Invalid email" });
-  }
-  if (email.length >= 255) {
+  } else if (email.length >= 255) {
     errors.push({
       field: "email",
       message: "Should contain less than 255 characters",
     });
   }
 
-  if (city.length >= 255) {
-    errors.push({
-      field: "city",
-      message: "Should contain less than 255 characters",
-    });
-  }
   if (typeof city !== "string") {
     errors.push({
       field: "city",
       message: "This type of field is not correct",
+    });
+  } else if (city.length >= 255) {
+    errors.push({
+      field: "city",
+      message: "Should contain less than 255 characters",
     });
   }
   if (typeof language !== "string" && typeof language !== null) {
@@ -70,8 +62,7 @@ const validateUser = (req, res, next) => {
       field: "language",
       message: "This type of field is not correct",
     });
-  }
-  if (language.length >= 255) {
+  } else if (language.length >= 255) {
     errors.push({
       field: "language",
       message: "Should contain less than 255 characters",
@@ -85,4 +76,4 @@ const validateUser = (req, res, next) => {
   }
 };
 
-module.exports = { validateUser };
+module.exports = validateUser;

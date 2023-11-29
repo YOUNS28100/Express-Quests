@@ -9,8 +9,7 @@ const validateMovie = (req, res, next) => {
       field: "title",
       message: "This type of field is not correct",
     });
-  }
-  if (title.length >= 255) {
+  } else if (title.length >= 255) {
     errors.push({
       field: "title",
       message: "Should contain less than 255 characters",
@@ -23,22 +22,20 @@ const validateMovie = (req, res, next) => {
       field: "director",
       message: "This type of field is not correct",
     });
-  }
-  if (director.length >= 255) {
+  } else if (director.length >= 255) {
     errors.push({
       field: "director",
       message: "Should contain less than 255 characters",
     });
   }
-  if (year == null) {
+  if (year == null || year == undefined) {
     errors.push({ field: "year", message: "This field is required" });
   } else if (typeof year !== "string") {
     errors.push({
       field: "year",
       message: "This type of field is not correct",
     });
-  }
-  if (year.length >= 255) {
+  } else if (year.length >= 255) {
     errors.push({
       field: "year",
       message: "Should contain less than 255 characters",
@@ -72,4 +69,4 @@ const validateMovie = (req, res, next) => {
   }
 };
 
-module.exports = { validateMovie };
+module.exports = validateMovie;

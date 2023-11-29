@@ -152,11 +152,11 @@ describe("PUT /api/users/:id", () => {
 
   it("should return no user", async () => {
     const newUser = {
-      title: "Avatar",
-      director: "James Cameron",
-      year: "2009",
-      color: "1",
-      duration: 162,
+      firstname: "Marie",
+      lastname: "Martin",
+      email: `${crypto.randomUUID()}@wild.co`,
+      city: "Paris",
+      language: "French",
     };
 
     const response = await request(app).put("/api/users/0").send(newUser);
