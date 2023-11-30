@@ -5,6 +5,21 @@ const database = require("../database");
 
 afterAll(() => database.end());
 
+const newMovie = {
+  title: "Avatar",
+  director: "James Cameron",
+  year: "2009",
+  color: "1",
+  duration: 162,
+};
+const updatedMovie = {
+  title: "Wild is life",
+  director: "Alan Smithee",
+  year: "2023",
+  color: "0",
+  duration: 120,
+};
+
 describe("GET /api/movies", () => {
   it("should return all movies", async () => {
     const response = await request(app).get("/api/movies");
@@ -37,14 +52,6 @@ describe("POST /api/movies", () => {
 
 describe("POST /api/movies", () => {
   it("should return created movie", async () => {
-    const newMovie = {
-      title: "Star Wars",
-      director: "George Lucas",
-      year: "1977",
-      color: "1",
-      duration: 120,
-    };
-
     const response = await request(app).post("/api/movies").send(newMovie);
 
     expect(response.status).toEqual(201);
@@ -83,14 +90,6 @@ describe("POST /api/movies", () => {
 
 describe("PUT /api/movies/:id", () => {
   it("should edit movie", async () => {
-    const newMovie = {
-      title: "Avatar",
-      director: "James Cameron",
-      year: "2010",
-      color: "1",
-      duration: 162,
-    };
-
     const [result] = await database.query(
       "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
       [
@@ -103,14 +102,6 @@ describe("PUT /api/movies/:id", () => {
     );
 
     const id = result.insertId;
-
-    const updatedMovie = {
-      title: "Wild is life",
-      director: "Alan Smithee",
-      year: "2023",
-      color: "0",
-      duration: 120,
-    };
 
     const response = await request(app)
       .put(`/api/movies/${id}`)
@@ -154,15 +145,33 @@ describe("PUT /api/movies/:id", () => {
   });
 
   it("should return no movie", async () => {
-    const newMovie = {
-      title: "Avatar",
-      director: "James Cameron",
-      year: "2009",
-      color: "1",
-      duration: 162,
-    };
-
     const response = await request(app).put("/api/movies/0").send(newMovie);
+
+    expect(response.status).toEqual(404);
+  });
+});
+
+describe("DELETE /api/movies/:id", () => {
+  it("should delete the movie", async () => {
+    const [result] = await database.query(
+      "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
+      [
+        newMovie.title,
+        newMovie.director,
+        newMovie.year,
+        newMovie.color,
+        newMovie.duration,
+      ]
+    );
+
+    const id = result.insertId;
+
+    const response = await request(app).delete(`/api/movies/${id}`);
+
+    expect(response.status).toEqual(204);
+  });
+  it("should return no movie", async () => {
+    const response = await request(app).delete(`/api/movies/0`);
 
     expect(response.status).toEqual(404);
   });

@@ -5,6 +5,21 @@ const database = require("../database");
 
 afterAll(() => database.end());
 
+const newUser = {
+  firstname: "Marie",
+  lastname: "Martin",
+  email: `${crypto.randomUUID()}@wild.co`,
+  city: "Paris",
+  language: "French",
+};
+const updatedUser = {
+  firstname: "Mario",
+  lastname: "Martino",
+  email: `${crypto.randomUUID()}@wild.co`,
+  city: "Marseille",
+  language: "French",
+};
+
 describe("GET /api/users", () => {
   it("should return all users", async () => {
     const response = await request(app).get("/api/users");
@@ -37,14 +52,6 @@ describe("POST /api/users", () => {
 
 describe("POST /api/users", () => {
   it("should return created user", async () => {
-    const newUser = {
-      firstname: "Marie",
-      lastname: "Martin",
-      email: `${crypto.randomUUID()}@wild.co`,
-      city: "Paris",
-      language: "French",
-    };
-
     const response = await request(app).post("/api/users").send(newUser);
 
     expect(response.status).toEqual(201);
@@ -83,34 +90,18 @@ describe("POST /api/users", () => {
 
 describe("PUT /api/users/:id", () => {
   it("should edit user", async () => {
-    const newUser = {
-      firstname: "Marie",
-      lastname: "Martin",
-      email: `${crypto.randomUUID()}@wild.co`,
-      city: "Paris",
-      language: "French",
-    };
-
     const [result] = await database.query(
       "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
       [
         newUser.firstname,
         newUser.lastname,
-        newUser.email,
+        `${crypto.randomUUID()}@wild.co`,
         newUser.city,
         newUser.language,
       ]
     );
 
     const id = result.insertId;
-
-    const updatedUser = {
-      firstname: "Mario",
-      lastname: "Martino",
-      email: `${crypto.randomUUID()}@wild.co`,
-      city: "Marseille",
-      language: "French",
-    };
 
     const response = await request(app)
       .put(`/api/users/${id}`)
@@ -151,15 +142,34 @@ describe("PUT /api/users/:id", () => {
   });
 
   it("should return no user", async () => {
-    const newUser = {
-      firstname: "Marie",
-      lastname: "Martin",
-      email: `${crypto.randomUUID()}@wild.co`,
-      city: "Paris",
-      language: "French",
-    };
-
     const response = await request(app).put("/api/users/0").send(newUser);
+
+    expect(response.status).toEqual(404);
+  });
+});
+
+describe("DELETE /api/users/:id", () => {
+  it("should delete the user", async () => {
+    const [result] = await database.query(
+      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+      [
+        newUser.firstname,
+        newUser.lastname,
+        `${crypto.randomUUID()}@wild.co`,
+        newUser.city,
+        newUser.language,
+      ]
+    );
+
+    const id = result.insertId;
+
+    const response = await request(app).delete(`/api/users/${id}`);
+
+    expect(response.status).toEqual(204);
+  });
+
+  it("should return no user", async () => {
+    const response = await request(app).delete(`/api/users/0`);
 
     expect(response.status).toEqual(404);
   });
